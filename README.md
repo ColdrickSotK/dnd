@@ -1,30 +1,116 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# SotK's D&D Adventures
 
-## Getting Started
+This is a collection of Dungeons and Dragons 5e adventures, mostly in the
+form of GM planning notes for now. These can all be run as one-shot adventures
+with no previous context needed, or as connected adventures in an episodic
+campaign.
 
-First, run the development server:
+This repo also contains a Next.js app which renders the notes for a pleasant
+browsing experience. It is live at https://dnd.sotk.co.uk/.
 
-```bash
+All the code in this project is licensed under the [Apache-2.0 License][0], and
+the adventures and any related art are licensed [CC-BY-SA 4.0][1].
+
+[0]: https://www.apache.org/licenses/LICENSE-2.0
+[1]: https://creativecommons.org/licenses/by-sa/4.0/
+
+## Running locally
+
+The app can be run locally using Node.
+
+```shell
 npm run dev
-# or
-yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+By default the dev server will be running on http://localhost:3000.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+The app is a pretty simple Next.js app, the root page can be modified in
+`pages/index.js`. This isn't a tutorial for writing Next.js apps, take
+a look at [the documentation][2] to learn how things work properly.
 
-## Learn More
+[2]: https://nextjs.org/docs
 
-To learn more about Next.js, take a look at the following resources:
+## Adding content
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+To add a new adventure, create a new directory inside the `adventures`
+directory named with whatever you want the URL slug for your adventure
+to be. Lets say we're adding an adventure called `Lord Dumont's Disappearance`,
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+```shell
+mkdir adventures/lord-dumonts-disappearance
+```
 
-## Deploy on Vercel
+Inside that directory, create a `sections` subdirectory and a `summary.md`
+file.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/import?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```shell
+mkdir adventures/lord-dumonts-disappearance/sections
+touch adventures/lord-dumonts-disappearance/summary.md
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+This `summary.md` file needs to contain at least some basic metadata, and
+ideally some markdown content summarising the concept of the adventure.
+
+The format looks like this, with all keys in the frontmatter required.
+
+```markdown
+---
+title: Lord Dumont's Disappearance
+updated: 2021-12-14
+order: 10
+---
+
+Lord Dumont has disappeared, along with his entire family. Thankfully, the
+Ealdormen of Isle Dumont are largely competent folks, and the general
+running of the place hasn't been affected.
+
+Some of the populace are a bit concerned however, and rewards for information
+have been posted around the towns. Lord Dumont was a relatively popular
+figure, so public opinion is a bit confused about what caused this.
+```
+
+Finally, add an `overview.md` file to the `sections` subdirectory. This will
+produce the "landing page" for your adventure, so a good few paragraphs
+setting the scene will go well here. If you're feeling lazy, it can also just
+be very similar to the summary.
+
+The format looks like this, with the `subsections` key in the frontmatter
+optional but the others required.
+
+```markdown
+---
+title: Overview
+order: 1
+subsections:
+  - title: Starting Situation
+    anchor: starting-situation
+---
+
+## Overview
+
+Lord Dumont has disappeared, along with his entire family. Thankfully, the
+Ealdormen of Isle Dumont are largely competent folks, and the general
+running of the place hasn't been affected.
+
+Some of the populace are a bit concerned however, and rewards for information
+have been posted around the towns. Lord Dumont was a relatively popular
+figure, so public opinion is a bit confused about what caused this.
+
+### Starting Situation {#starting-situation}
+
+The party has entered a tavern in the town of Crowvale on the mainland. There's
+a poster about the missing Lord on the wall, and in short order they'll be
+confronted by a group of fishermen who don't like to see their sort around here.
+```
+
+Note the seemingly extra `#` for each header, that helps keep the heading
+hierarchy in the rendered page sensible, since `<h1>` is taken up by the
+actual adventure name.
+
+The elements in the `subsections` list in the frontmatter will show up in
+the contents sidebar, with the optional anchor making them clickable and
+linkable. Note that the anchor needs to be manually included on a relevant
+heading.
+
+Further sections in the adventure follow the same format, with the `order`
+key in the frontmatter being used to arrange them in the contents sidebar.

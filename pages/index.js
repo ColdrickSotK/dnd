@@ -1,65 +1,72 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+// Copyright 2021 Adam Coldrick
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-export default function Home() {
+import Head from "next/head";
+import Link from "next/link";
+import { getAllAdventures } from "../lib/adventures";
+
+export async function getStaticProps() {
+  const adventures = await getAllAdventures();
+  return {
+    props: {
+      adventures,
+    },
+  };
+}
+
+export default function Home({ adventures }) {
   return (
-    <div className={styles.container}>
+    <div className="">
       <Head>
-        <title>Create Next App</title>
+        <title>D&D 5e Oneshots</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+      <main className="grid grid-cols-4 mb-20">
+        <h1 className="col-span-3 col-start-2 pt-16 pb-20 text-6xl">
+          Adventures in the Foran Empire
         </h1>
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+        <section className="col-span-3 col-start-2">
+          <p className="max-w-2xl mb-16 prose">
+            This is a loosely connected set of 3-4 hour adventures that take
+            place in the same world in the same time period. They're all
+            self-contained enough to be run as one-shots, whilst having enough
+            shared context that they can work as entries in an episodic
+            campaign.
+          </p>
+          <ul>
+            {adventures.map((adventure) => (
+              <li className="pb-10">
+                <div>
+                  <Link href={`adventures/${adventure.id}/overview`}>
+                    <h2 className="pb-2 text-2xl font-semibold text-red-700 cursor-pointer hover:underline">
+                      {adventure.title}
+                    </h2>
+                  </Link>
+                  <div
+                    className="max-w-2xl prose"
+                    dangerouslySetInnerHTML={{ __html: adventure.summary }}
+                  />
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
       </main>
 
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
+      <footer className=""></footer>
     </div>
-  )
+  );
 }
